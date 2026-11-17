@@ -70,6 +70,19 @@ describe("system prompt updates", () => {
 		}
 	});
 
+	test("renders the same tool list and rules for the same tools in any order", () => {
+		// Launches of one session can build the active tools in different orders (--tools, transcript restore,
+		// extensions re-adding a tool); a different prompt would patch the transcript and miss the cache.
+		const options = {
+			cwd: "/tmp",
+			toolSnippets: { read: "Read files", bash: "Run commands", grep: "Search files" },
+			toolGuidelines: { read: ["Read before editing"], grep: ["Prefer grep for searches"] },
+		};
+		expect(buildSystemPromptSections({ ...options, selectedTools: ["grep", "bash", "read"] })).toEqual(
+			buildSystemPromptSections({ ...options, selectedTools: ["read", "grep", "bash"] }),
+		);
+	});
+
 	test("opens a transcript without a system message and declares the prompt on the first request", async () => {
 		const tempDir = mkdtempSync(join(tmpdir(), "pi-system-prompt-migration-"));
 		try {
