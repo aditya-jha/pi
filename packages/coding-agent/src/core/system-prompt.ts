@@ -147,7 +147,9 @@ export function buildSystemPromptSections(input: BuildSystemPromptOptions): Syst
 		}
 	}
 
-	const declaredTools = selectedTools.filter((name) => !hiddenTools.includes(name));
+	// Sorted so the prompt does not depend on the order a launch activated the tools in: another order
+	// would patch the transcript and, without mid-conversation system messages, miss the prompt cache.
+	const declaredTools = selectedTools.filter((name) => !hiddenTools.includes(name)).sort();
 	const promptSections: Record<string, string> = {};
 	if (customPrompt) {
 		promptSections.preamble = customPrompt;
