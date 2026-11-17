@@ -70,6 +70,7 @@ describe("system prompt updates", () => {
 		}
 	});
 
+	// Regression: aditya-jha/pi-nexus#139.
 	test("renders the same tool list and rules for the same tools in any order", () => {
 		// Launches of one session can build the active tools in different orders (--tools, transcript restore,
 		// extensions re-adding a tool); a different prompt would patch the transcript and miss the cache.
